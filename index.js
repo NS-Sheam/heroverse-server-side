@@ -34,9 +34,16 @@ async function run() {
     const toyCollection = client.db("toyMarketplaceDb").collection("toyData");
 
 
-    app.get("/allData", async (req, res) =>{
-        const result = await toyCollection.find().toArray();
-        res.send(result);
+    app.get("/alldata", async (req, res) => {
+      const result = await toyCollection.find().toArray();
+      res.send(result);
+    })
+    app.get("/alldata/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await toyCollection.findOne(query);
+      res.send(result);
     })
 
 
@@ -52,12 +59,12 @@ run().catch(console.dir);
 
 
 
-app.get("/", (req, res) =>{
-    res.send("toy marketplace is running");
+app.get("/", (req, res) => {
+  res.send("toy marketplace is running");
 })
 
 
 
-app.listen(port, () =>{
-    console.log(`toy marketplace is running on port ${port}`);
+app.listen(port, () => {
+  console.log(`toy marketplace is running on port ${port}`);
 })
