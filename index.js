@@ -35,16 +35,20 @@ async function run() {
 
 
     app.get("/alldata", async (req, res) => {
-      const query = req.query.filter;
-      console.log(query);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email }
+        const result = await toyCollection.find(query).toArray();
+        res.send(result);
+        return;
+      }
       if (req.query?.filter === "Price") {
-        const result = await toyCollection.find().sort({price: 1}).toArray();
+        const result = await toyCollection.find().sort({ price: 1 }).toArray();
         res.send(result);
         return;
       }
       if (req.query?.filter === "Recent post") {
-        console.log("object");
-        const result = await toyCollection.find().sort({createdAt: -1}).toArray();
+        const result = await toyCollection.find().sort({ createdAt: -1 }).toArray();
         res.send(result);
         return;
       }
@@ -62,7 +66,7 @@ async function run() {
     // Add product 
     app.post("/addtoy", async (req, res) => {
       const addedToy = req.body;
-      body.createdAt = new Date();
+      addedToy.createdAt = new Date();
       const result = await toyCollection.insertOne(addedToy);
       res.send(result);
 
