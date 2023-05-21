@@ -36,6 +36,15 @@ async function run() {
 
     app.get("/alldata", async (req, res) => {
       let query = {};
+      if (req.query?.page || req.query?.limit) {
+      const page = parseInt(req.query.page) || 0;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = page * limit;
+      const result = await toyCollection.find().skip(skip).limit(limit).toArray();
+      res.send(result);
+      console.log(skip);
+      return;
+      }
       if (req.query?.email) {
         query = { email: req.query.email }
         const result = await toyCollection.find(query).toArray();
@@ -70,6 +79,7 @@ async function run() {
       const result = await toyCollection.findOne(query);
       res.send(result);
     })
+
 
     // Add product 
     app.post("/addtoy", async (req, res) => {
