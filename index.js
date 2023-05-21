@@ -36,14 +36,19 @@ async function run() {
 
     app.get("/alldata", async (req, res) => {
       let query = {};
-      if (req.query?.page || req.query?.limit) {
-      const page = parseInt(req.query.page) || 0;
-      const limit = parseInt(req.query.limit) || 10;
-      const skip = page * limit;
-      const result = await toyCollection.find().skip(skip).limit(limit).toArray();
-      res.send(result);
-      console.log(skip);
-      return;
+      // if (req.query?.page || req.query?.limit) {
+      // const page = parseInt(req.query.page) || 0;
+      // const limit = parseInt(req.query.limit) || 10;
+      // const skip = page * limit;
+      // const result = await toyCollection.find().skip(skip).limit(limit).toArray();
+      // res.send(result);
+      // console.log(skip);
+      // return;
+      // }
+      if(req?.query.limit === "all"){
+        const result = await toyCollection.find().toArray();
+        res.send(result);
+        return;
       }
       if (req.query?.email) {
         query = { email: req.query.email }
@@ -69,7 +74,7 @@ async function run() {
         res.send(result);
         return;
       }
-      const result = await toyCollection.find().toArray();
+      const result = await toyCollection.find().limit(20).toArray();
       res.send(result);
     })
     app.get("/alldata/:id", async (req, res) => {
