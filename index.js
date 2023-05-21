@@ -52,6 +52,14 @@ async function run() {
         res.send(result);
         return;
       }
+      if (req.query?.search) {
+        const searchQuery = req.query.search;
+        const regex = new RegExp(searchQuery, 'i');
+        const query = { toyName: regex };
+        const result = await toyCollection.find(query).toArray();
+        res.send(result);
+        return;
+      }
       const result = await toyCollection.find().toArray();
       res.send(result);
     })
